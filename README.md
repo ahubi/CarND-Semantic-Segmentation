@@ -23,6 +23,7 @@ For loss and optimizer operations cross-entropy, and an Adam optimizer is used.
 
 ### Sample output
 Complete output can be found [here](./data/runs/1517335217.1687207)
+
 ![Sample from um_ pictures](./data/runs/1517335217.1687207/um_000022.png)
 
 ![Sample from umm_ pictures](./data/runs/1517335217.1687207/umm_000092.png)
