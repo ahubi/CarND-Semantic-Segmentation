@@ -10,7 +10,9 @@ import tensorflow as tf
 from glob import glob
 from urllib.request import urlretrieve
 from tqdm import tqdm
-
+from tensorflow.python.platform import gfile
+from tensorflow.core.protobuf import saved_model_pb2
+from tensorflow.python.util import compat
 
 class DLProgress(tqdm):
     last_block = 0
@@ -20,6 +22,21 @@ class DLProgress(tqdm):
         self.update((block_num - self.last_block) * block_size)
         self.last_block = block_num
 
+def write_tensorboard(model_filename, logdir):
+    """
+    Write tensorflow graph to a directory
+    :param model_filename: path to the model, e.g. './saved_model.pb'
+    :param logdir: Directory to write the graph for tensorboard
+    """
+    with tf.Session() as sess:
+        with gfile.FastGFile(model_filename, 'rb') as f:
+            data = compat.as_bytes(f.read())
+            sm = saved_model_pb2.SavedModel()
+            sm.ParseFromString(data)
+            g_in = tf.import_graph_def(sm.meta_graphs[0].graph_def)
+
+    train_writer = tf.summary.FileWriter(logdir)
+    train_writer.add_graph(sess.graph)
 
 def maybe_download_pretrained_vgg(data_dir):
     """

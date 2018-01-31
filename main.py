@@ -6,6 +6,7 @@ from distutils.version import LooseVersion
 import project_tests as tests
 
 
+
 # Check TensorFlow Version
 assert LooseVersion(tf.__version__) >= LooseVersion('1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
 print('TensorFlow Version: {}'.format(tf.__version__))
@@ -132,7 +133,6 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         print()
 tests.test_train_nn(train_nn)
 
-
 def run():
     num_classes = 2
     image_shape = (160, 576)
@@ -150,6 +150,11 @@ def run():
     with tf.Session() as sess:
         # Path to vgg model
         vgg_path = os.path.join(data_dir, 'vgg')
+        model_filename = os.path.join(vgg_path, 'saved_model.pb')
+
+        #Activate if tensorboard graph should be written.
+        #helper.write_tensorboard(model_filename, './tensorboard2')
+
         # Create function to get batches
         get_batches_fn = helper.gen_batch_function(os.path.join(data_dir, 'data_road/training'), image_shape)
 
